@@ -2,17 +2,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const MIKE_CONTEXT: Record<string, string> = {
-  recruiter: "You are Mike Ncube's AI assistant talking to a RECRUITER. Be professional and concise. Highlight: 5+ years building AI/ML systems, RAG architectures deployed across 26 countries, AWS infrastructure with 99.9% uptime, 92% ML accuracy on 10M+ records/day. Mike is available immediately for AI Infrastructure roles. Email: mikencube03@gmail.com. GitHub: MikeNcube.",
-  developer: "You are Mike Ncube's AI assistant talking to a DEVELOPER. Be technical and detailed. Highlight: RAG with semantic chunking, MMR reranking, hybrid dense/sparse retrieval. Agentic AI: planner-executor-critic multi-agent architecture. AWS: Multi-AZ, ALB, Auto Scaling, CodePipeline. Stack: Python, LangChain, Spark, PostgreSQL, Docker, Next.js. Open to collaboration.",
-  friend: "You are Mike Ncube's AI assistant talking to a FRIEND. Be casual, warm and fun. Mike is an AI engineer from South Africa who built cool AI systems deployed across 26 African countries. He loves building things that scale and is always up for a chat about AI, tech or life.",
-};
-
 const skills = [
-  { category: 'AI and LLM', icon: 'ðŸ¤–', items: ['RAG Architectures', 'Agentic AI', 'LangChain', 'Vector DBs', 'Prompt Engineering', 'Gemini CLI'] },
-  { category: 'Cloud and Infra', icon: 'â˜ï¸', items: ['AWS EC2/ALB', 'Auto Scaling', 'CI/CD', 'Terraform', 'Railway', 'VPC/IAM'] },
-  { category: 'Data and ML', icon: 'ðŸ“Š', items: ['Apache Spark', 'Python', 'PostgreSQL', 'Pandas', 'Docker', 'ML Pipelines'] },
-  { category: 'Architecture', icon: 'ðŸ—ï¸', items: ['System Design', 'REST APIs', 'React', 'Workflow Automation', 'Compliance Systems', 'Audit Logging'] },
+  { category: 'AI and LLM', icon: '🤖', items: ['RAG Architectures', 'Agentic AI', 'LangChain', 'Vector DBs', 'Prompt Engineering', 'Gemini CLI'] },
+  { category: 'Cloud and Infra', icon: '☁️', items: ['AWS EC2/ALB', 'Auto Scaling', 'CI/CD', 'Terraform', 'Railway', 'VPC/IAM'] },
+  { category: 'Data and ML', icon: '📊', items: ['Apache Spark', 'Python', 'PostgreSQL', 'Pandas', 'Docker', 'ML Pipelines'] },
+  { category: 'Architecture', icon: '🏗️', items: ['System Design', 'REST APIs', 'React', 'Workflow Automation', 'Compliance Systems', 'Audit Logging'] },
 ];
 
 const stats = [
@@ -32,9 +26,15 @@ type Project = {
   url: string;
 };
 
+type Source = {
+  title: string;
+  url: string;
+};
+
 type Message = {
   role: 'ai' | 'user';
   content: string;
+  sources?: Source[];
 };
 
 export default function Home() {
@@ -64,9 +64,9 @@ export default function Home() {
     setVisitorType(type);
     setChatStarted(true);
     const greetings: Record<string, string> = {
-      recruiter: "Hi! I'm Mike's AI assistant. I see you're a recruiter â€” great! Mike is actively looking for AI Infrastructure roles. What would you like to know about his experience?",
+      recruiter: "Hi! I'm Mike's AI assistant. I see you're a recruiter — great! Mike is actively looking for AI Engineer roles. What would you like to know about his experience?",
       developer: "Hey! Fellow developer here. Mike's built some seriously cool RAG and agentic AI systems. Want to geek out about the tech stack?",
-      friend: "Hey there! ðŸ‘‹ Mike's pretty awesome â€” built AI systems deployed across 26 countries! What do you want to know about him?",
+      friend: "Hey there! 👋 Mike's pretty awesome — built AI systems deployed across 26 countries! What do you want to know about him?",
     };
     setMessages([{ role: 'ai', content: greetings[type] }]);
   };
@@ -81,14 +81,14 @@ export default function Home() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: msg,
-          repos: projects,
-          context: MIKE_CONTEXT[visitorType] || MIKE_CONTEXT.developer,
-        }),
+        body: JSON.stringify({ message: msg, audience: visitorType || 'developer' }),
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { role: 'ai', content: data.response || 'Sorry, something went wrong.' }]);
+      if (!res.ok) {
+        setMessages(prev => [...prev, { role: 'ai', content: data.error || 'Sorry, something went wrong. Please try again.' }]);
+      } else {
+        setMessages(prev => [...prev, { role: 'ai', content: data.response, sources: data.sources }]);
+      }
     } catch {
       setMessages(prev => [...prev, { role: 'ai', content: 'Connection error. Please try again.' }]);
     }
@@ -156,7 +156,7 @@ export default function Home() {
               <span className="glow-text">Ncube</span>
             </h1>
             <p className="text-base leading-relaxed mb-8 max-w-md" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              I design and deploy scalable AI systems â€” RAG architectures, agentic workflows, and cloud infrastructure built for real enterprise environments.
+              I design and deploy scalable AI systems — RAG architectures, agentic workflows, and cloud infrastructure built for real enterprise environments.
             </p>
             <div className="flex gap-4 mb-8 flex-wrap">
               <a href="#projects" style={{ padding: '13px 28px', borderRadius: 10, fontWeight: 700, fontSize: 14, background: '#0066FF', color: '#fff', textDecoration: 'none', display: 'inline-block' }}>View Projects</a>
@@ -194,10 +194,10 @@ export default function Home() {
                   <div className="w-3 h-3 rounded-full" style={{ background: '#FFBD2E' }}></div>
                   <div className="w-3 h-3 rounded-full" style={{ background: '#28C840' }}></div>
                 </div>
-                <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.4)' }}>mike-ai v3.0</span>
+                <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.4)' }}>Ask about Mike&apos;s work</span>
                 <div className="flex items-center gap-1.5">
                   <motion.div animate={{ scale: [1, 1.4, 1], opacity: [1, 0.4, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-2 h-2 rounded-full" style={{ background: '#00C896' }} />
-                  <span className="text-xs font-mono" style={{ color: '#00C896' }}>GEMINI</span>
+                  <span className="text-xs font-mono" style={{ color: '#00C896' }}>RAG · Gemini</span>
                 </div>
               </div>
 
@@ -208,9 +208,9 @@ export default function Home() {
                     <p className="text-xs mb-3 text-center font-mono" style={{ color: 'rgba(255,255,255,0.5)' }}>Who are you? I will tailor my responses for you.</p>
                     <div className="flex gap-2 justify-center flex-wrap">
                       {[
-                        { type: 'recruiter', label: 'ðŸ’¼ Recruiter', desc: 'Hiring?' },
-                        { type: 'developer', label: 'ðŸ‘¨â€ðŸ’» Developer', desc: 'Tech talk?' },
-                        { type: 'friend', label: 'ðŸ‘‹ Friend', desc: 'Just curious?' }
+                        { type: 'recruiter', label: '💼 Recruiter', desc: 'Hiring?' },
+                        { type: 'developer', label: '👨‍💻 Developer', desc: 'Tech talk?' },
+                        { type: 'friend', label: '👋 Friend', desc: 'Just curious?' }
                       ].map(v => (
                         <motion.button key={v.type} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => selectVisitorType(v.type)}
                           className="px-3 py-2 rounded-xl text-xs font-semibold flex flex-col items-center gap-0.5"
@@ -237,6 +237,15 @@ export default function Home() {
                       <div className="max-w-xs px-3 py-2 text-xs leading-relaxed"
                         style={{ whiteSpace: 'pre-line', background: msg.role === 'ai' ? 'rgba(255,255,255,0.05)' : 'rgba(0,102,255,0.2)', border: '1px solid ' + (msg.role === 'ai' ? 'rgba(255,255,255,0.08)' : 'rgba(0,102,255,0.3)'), borderRadius: msg.role === 'ai' ? '4px 12px 12px 12px' : '12px 4px 12px 12px', color: 'rgba(255,255,255,0.85)' }}>
                         {msg.content}
+                        {msg.sources && msg.sources.length > 0 && (
+                          <span className="block mt-2 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                            {msg.sources.map(s => (
+                              <a key={s.url} href={s.url} target="_blank" rel="noopener noreferrer"
+                                className="inline-block mr-2 underline"
+                                style={{ color: '#00C896', fontSize: 10 }}>{s.title}</a>
+                            ))}
+                          </span>
+                        )}
                       </div>
                     </motion.div>
                   ))}
@@ -277,7 +286,7 @@ export default function Home() {
                   style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.87)' }} />
                 <button onClick={() => send(input)} disabled={!chatStarted || loading || !input.trim()}
                   className="w-8 h-8 rounded-lg text-white text-xs font-bold flex-shrink-0 flex items-center justify-center"
-                  style={{ background: '#0066FF', border: 'none', cursor: 'pointer' }}>â†’</button>
+                  style={{ background: '#0066FF', border: 'none', cursor: 'pointer' }}>→</button>
               </div>
             </div>
           </motion.div>
@@ -294,7 +303,7 @@ export default function Home() {
               <span className="text-xs font-mono" style={{ color: '#00C896' }}>Auto-synced from GitHub</span>
             </div>
           </div>
-          <p className="mb-12 text-sm" style={{ color: 'rgba(255,255,255,0.45)', maxWidth: 500 }}>Live projects pulled directly from GitHub â€” always up to date.</p>
+          <p className="mb-12 text-sm" style={{ color: 'rgba(255,255,255,0.45)', maxWidth: 500 }}>Live projects pulled directly from GitHub — always up to date.</p>
 
           {loadingProjects ? (
             <div className="flex gap-3 items-center p-6">
@@ -329,7 +338,7 @@ export default function Home() {
                         </div>
                       ))}
                     </div>
-                    <span style={{ fontSize: 12, fontFamily: "monospace", color: "rgba(255,255,255,0.3)" }} style={{ color: 'rgba(255,255,255,0.4)' }}>View →</span>
+                    <span style={{ fontSize: 12, fontFamily: 'monospace', color: 'rgba(255,255,255,0.4)' }}>View →</span>
                   </div>
                 </motion.div>
               ))}
@@ -353,7 +362,7 @@ export default function Home() {
                   {s.items.map(item => (
                     <li key={item} className="text-xs flex items-center gap-2"
                       style={{ color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: 4 }}>
-                      <span style={{ color: '#0066FF', fontSize: 8 }}>â–¶</span>{item}
+                      <span style={{ color: '#0066FF', fontSize: 8 }}>▶</span>{item}
                     </li>
                   ))}
                 </ul>
@@ -396,7 +405,7 @@ export default function Home() {
             <button onClick={handleContact} disabled={formStatus === 'sending' || !form.name || !form.email || !form.message}
               className="w-full py-4 rounded-xl font-bold text-sm text-white transition-all"
               style={{ background: formStatus === 'success' ? '#00C896' : formStatus === 'error' ? '#FF5F57' : '#0066FF', border: 'none', cursor: 'pointer' }}>
-              {formStatus === 'sending' ? 'Sending...' : formStatus === 'success' ? 'âœ“ Message Sent!' : formStatus === 'error' ? 'Failed - Try Again' : 'Send Message'}
+              {formStatus === 'sending' ? 'Sending...' : formStatus === 'success' ? '✓ Message Sent!' : formStatus === 'error' ? 'Failed - Try Again' : 'Send Message'}
             </button>
           </div>
 
