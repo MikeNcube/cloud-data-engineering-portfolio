@@ -261,7 +261,7 @@ export const interviewGuide = [
     title: "Read the retrieval code",
     time: "~10 min",
     body: "lib/rag.ts (embed + cosine top-4), app/api/chat/route.ts (similarity gate, rate limits, grounded prompt).",
-    href: "https://github.com/MikeNcube/mike-portfolio/tree/master/lib",
+    href: "https://github.com/MikeNcube/mike-portfolio/tree/main/lib",
     label: "View source ↗",
   },
   {

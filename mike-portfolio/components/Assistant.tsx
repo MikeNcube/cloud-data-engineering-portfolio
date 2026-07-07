@@ -24,15 +24,15 @@ const TECH_SPEC = [
 const CODE_LINKS = [
   {
     label: "lib/rag.ts",
-    href: "https://github.com/MikeNcube/mike-portfolio/blob/master/lib/rag.ts",
+    href: "https://github.com/MikeNcube/mike-portfolio/blob/main/lib/rag.ts",
   },
   {
     label: "app/api/chat/route.ts",
-    href: "https://github.com/MikeNcube/mike-portfolio/blob/master/app/api/chat/route.ts",
+    href: "https://github.com/MikeNcube/mike-portfolio/blob/main/app/api/chat/route.ts",
   },
   {
     label: "lib/knowledge.ts",
-    href: "https://github.com/MikeNcube/mike-portfolio/blob/master/lib/knowledge.ts",
+    href: "https://github.com/MikeNcube/mike-portfolio/blob/main/lib/knowledge.ts",
   },
 ];
 
