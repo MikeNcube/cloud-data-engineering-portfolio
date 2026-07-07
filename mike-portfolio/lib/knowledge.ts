@@ -72,12 +72,6 @@ export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = [
     text: 'The RDS Connectivity Lab demonstrates hands-on troubleshooting of connectivity between an EC2 instance and an Amazon RDS PostgreSQL database: VPC configuration and subnet routing, security group and NACL setup, IAM roles and permissions for EC2-to-S3 access, and automation with Python (boto3) and SQL.',
   },
   {
-    id: 'portfolio-stats',
-    title: 'Headline numbers on the portfolio',
-    sourceUrl: 'https://mikencube.github.io/',
-    text: "Mike's portfolio highlights these figures from his project work: systems serving users across 26-plus countries (the Zororo Phumulani insurance platform), 92 percent prediction accuracy and a 60 percent latency reduction on a recommendation pipeline handling 10-million-plus records per day, and 99.9 percent-plus uptime on his AWS multi-AZ infrastructure work. These figures come from his own project reporting on the portfolio.",
-  },
-  {
     id: 'certifications',
     title: 'Certifications and training',
     sourceUrl: 'https://mikencube.github.io/#skills',
