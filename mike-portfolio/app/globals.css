@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0d14;
+  --bg-elev: #0f1320;
+  --fg: #ededf0;
+  --fg-muted: #b9b9c1;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --accent: #0066ff;
+  --signal: #00c896;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+body {
+  font-feature-settings: "ss01", "cv11", "cv03", "kern";
+}
+
+::selection {
+  background: rgba(0, 102, 255, 0.28);
+  color: #ffffff;
+}
+
+/* Visible keyboard focus everywhere, without doubling custom outlines. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@layer components {
+  .container-edge {
+    @apply mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-12;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[11.5px] font-medium uppercase tracking-[0.18em] text-ink-300;
+  }
+
+  .eyebrow-dot {
+    @apply h-1.5 w-1.5 rounded-full bg-accent;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-medium text-ink-200;
+  }
+
+  .chip-accent {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/[0.08] px-3 py-1 text-xs font-medium text-accent-glow;
+  }
+
+  .card {
+    @apply relative rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-colors duration-300 hover:border-white/20;
+  }
+
+  .card-lg {
+    @apply relative rounded-3xl border border-white/10 bg-white/[0.02] p-6 transition-colors duration-300 hover:border-white/20 sm:p-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-ink-900 transition hover:bg-ink-100 active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.02] px-5 py-2.5 text-sm font-medium text-white transition hover:border-white/30 hover:bg-white/[0.06];
+  }
+
+  .section-heading {
+    @apply font-display text-display-md text-white;
+  }
+
+  .mono {
+    @apply font-mono text-[12px] tracking-tight text-ink-300;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+/* Scrollbar refinement */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Respect users who prefer less motion: disable entrance animation,
+   smooth scrolling, and transitions. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
